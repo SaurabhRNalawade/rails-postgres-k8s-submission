@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rails-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rails
+  template:
+    metadata:
+      labels:
+        app: rails
+    spec:
+      containers:
+      - name: rails
+        image: ruby:3.1
+        command: ["bash", "-c", "cd /app && bundle install && rails db:migrate && rails s -b 0.0.0.0"]
+        ports:
+        - containerPort: 3000
+        volumeMounts:
+        - name: app-code
+          mountPath: /app
+      volumes:
+      - name: app-code
+        emptyDir: {}
